@@ -1,56 +1,49 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MovieCard } from "../movie-card/movie-card";
 import { MovieView } from "../movie-view/movie-view";
 
 export const MainView = () => {
-  const [movies, setMovies] = useState([
-    {
-      id: 1,
-      title: "Zero Dark Thirty",
-      image: "https://via.placeholder.com/600x800?text=Zero+Dark+Thirty",
-      director: "Kathrn Bigelow",
-    },
-    {
-      id: 2,
-      title: "Dune",
-      image: "https://via.placeholder.com/600x800/f7a46c/0a0606?text=Dune",
-      director: "Denis Villeneuve",
-    },
-    {
-      id: 3,
-      title: "The tree of life",
-      image:
-        "https://via.placeholder.com/600x800/65852e/ffffff?text=The+Tree+of+Life",
-      author: "Terence Mallick",
-    },
-  ]);
+	const [movies, setMovies] = useState([]);
+	const [selectedMovie, setSelectedMovie] = useState(null);
 
-  const [selectedMovie, setSelectedMovie] = useState(null);
+	useEffect(() => {
+		fetch("https://movieappskogaby.herokuapp.com/movies")
+			.then((response) => response.json())
+			.then((data) => {
+				const moviesFromApi = data.map((movie) => {
+					return {
+						id: movie._id,
+						title: movie.Title,
+						image: movie.ImagePath,
+						description: movie.Description,
+						genre: movie.Genre.Name,
+						director: movie.Director.Name,
+					};
+				});
 
-  if (selectedMovie) {
-    return (
-      <MovieView
-        movie={selectedMovie}
-        onBackClick={() => setSelectedMovie(null)}
-      />
-    );
-  }
+				setMovies(moviesFromApi);
+			});
+	}, []);
 
-  if (movies.length === 0) {
-    return <div>The list is empty!</div>;
-  }
+	if (selectedMovie) {
+		return <MovieView movie={selectedMovie} onBackClick={() => setSelectedMovie(null)} />;
+	}
 
-  return (
-    <div>
-      {movies.map((movie) => (
-        <MovieCard
-          key={movie.id}
-          movie={movie}
-          onMovieClick={(newSelectedMovie) => {
-            setSelectedMovie(newSelectedMovie);
-          }}
-        />
-      ))}
-    </div>
-  );
+	if (movies.length === 0) {
+		return <div>The list is empty!</div>;
+	}
+
+	return (
+		<div>
+			{movies.map((movie) => (
+				<MovieCard
+					key={movie.id}
+					movie={movie}
+					onMovieClick={(newSelectedMovie) => {
+						setSelectedMovie(newSelectedMovie);
+					}}
+				/>
+			))}
+		</div>
+	);
 };
