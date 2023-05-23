@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Form, Button, Card } from "react-bootstrap";
 
 export const LoginView = ({ onLoggedIn }) => {
 	const [username, setUsername] = useState("");
@@ -30,23 +31,43 @@ export const LoginView = ({ onLoggedIn }) => {
 					alert("No such user");
 				}
 			})
-			.catch((e) => {
+			.catch((error) => {
+				console.error("Error:", error);
 				alert("An error occurred during login. Please try again later.");
 			});
 	};
 
-	// login form with submit button
 	return (
-		<form onSubmit={handleSubmit}>
-			<label>
-				Username:
-				<input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
-			</label>
-			<label>
-				Password:
-				<input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-			</label>
-			<button type="submit">Submit</button>
-		</form>
+		<Card className="mt-2 mb-3 bg-success">
+			<Card.Body>
+				<Card.Title className="text-light">Log in</Card.Title>
+				<Form onSubmit={handleSubmit}>
+					<Form.Group>
+						<Form.Label className="text-light">Username:</Form.Label>
+						<Form.Control
+							type="text"
+							value={username}
+							onChange={(e) => setUsername(e.target.value)}
+							required
+							minLength="5"
+							className="bg-success text-light"
+						/>
+					</Form.Group>
+					<Form.Group>
+						<Form.Label className="text-light">Password:</Form.Label>
+						<Form.Control
+							type="password"
+							value={password}
+							onChange={(e) => setPassword(e.target.value)}
+							required
+							className="bg-success text-light"
+						/>
+					</Form.Group>
+					<Button className="mt-3" variant="light" type="submit">
+						Submit
+					</Button>
+				</Form>
+			</Card.Body>
+		</Card>
 	);
 };

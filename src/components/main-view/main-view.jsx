@@ -3,6 +3,7 @@ import { MovieCard } from "../movie-card/movie-card";
 import { MovieView } from "../movie-view/movie-view";
 import { LoginView } from "../login-view/login-view";
 import { SignupView } from "../signup-view/signup-view";
+import { Col, Button, Container, Row } from "react-bootstrap";
 
 export const MainView = () => {
 	const storedUser = JSON.parse(localStorage.getItem("user"));
@@ -13,24 +14,21 @@ export const MainView = () => {
 	const [selectedMovie, setSelectedMovie] = useState(null);
 	const [loading, setLoading] = useState(false);
 
-	// useEffect hook allows React to perform side effects in component e.g fetching data
 	useEffect(() => {
 		if (!token) {
 			return;
 		}
-		// set loading before sending API request
+
 		setLoading(true);
 		fetch("https://movieappskogaby.herokuapp.com/movies", {
 			headers: { Authorization: `Bearer ${token}` },
 		})
 			.then((response) => response.json())
 			.then((data) => {
-				// stops loading after response received
 				setLoading(false);
 				console.log("data", data);
 				const moviesFromApi = data.map((movie) => {
 					return {
-						// value names match to API database
 						id: movie._id,
 						title: movie.Title,
 						image: movie.ImagePath,
@@ -43,7 +41,6 @@ export const MainView = () => {
 			});
 	}, [token]);
 
-	// user must first either login or signup
 	if (!user) {
 		return (
 			<>
@@ -59,71 +56,59 @@ export const MainView = () => {
 		);
 	}
 
-	// displays movie-view when movie is selected (clicked)
 	if (selectedMovie) {
 		return (
 			<>
-				<button
+				<Button
 					onClick={() => {
 						setUser(null);
 						setToken(null);
 						localStorage.clear();
 					}}>
-					{" "}
 					Logout
-				</button>
+				</Button>
 				<MovieView movie={selectedMovie} onBackClick={() => setSelectedMovie(null)} />
 			</>
 		);
 	}
 
-	// displays text message if list of movies is empty
 	if (movies.length === 0) {
 		return (
 			<>
-				<button
+				<Button
 					onClick={() => {
 						setUser(null);
 						setToken(null);
 						localStorage.clear();
 					}}>
-					{" "}
 					Logout
-				</button>
+				</Button>
 				<div>The list is empty!</div>
 			</>
 		);
 	}
 
-	// displays movie-card with logout button, if user does not select a movie
 	return (
-		// conditional rendering for loading statment
-		loading ? (
-			<p>Loading...</p>
-		) : !movies || !movies.length ? (
-			<p>No movies found</p>
-		) : (
-			<div>
-				<button
-					onClick={() => {
-						setUser(null);
-						setToken(null);
-						localStorage.clear();
-					}}>
-					{" "}
-					Logout
-				</button>
-
+		<Container>
+			<Row>
+				<Col>
+					<Button
+						onClick={() => {
+							setUser(null);
+							setToken(null);
+							localStorage.clear();
+						}}>
+						Logout
+					</Button>
+				</Col>
+			</Row>
+			<Row>
 				{movies.map((movie) => (
-					<MovieCard
-						key={movie._id}
-						movie={movie}
-						onMovieClick={(newSelectedMovie) => {
-							setSelectedMovie(newSelectedMovie);
-						}}
-					/>
+					<Col key={movie.id} xs={12} sm={6} md={4} lg={3} xl={2}>
+						<MovieCard movie={movie} onClick={() => setSelectedMovie(movie)} />
+					</Col>
 				))}
-			</div>
-		)
+			</Row>
+		</Container>
 	);
 };

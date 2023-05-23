@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Form, Button, Card } from "react-bootstrap";
 
 export const SignupView = () => {
 	const [username, setUsername] = useState("");
@@ -6,7 +7,6 @@ export const SignupView = () => {
 	const [email, setEmail] = useState("");
 	const [birthday, setBirthday] = useState("");
 
-	// validation of user signup
 	const handleSubmit = (event) => {
 		event.preventDefault();
 
@@ -23,37 +23,73 @@ export const SignupView = () => {
 			headers: {
 				"Content-Type": "application/json",
 			},
-		}).then((response) => {
-			if (response.ok) {
-				alert("Signup successful");
-				window.location.reload();
-			} else {
-				alert("Signup failed");
-			}
-		});
+		})
+			.then((response) => {
+				if (response.ok) {
+					alert("Signup successful");
+					window.location.reload();
+				} else {
+					alert("Signup failed");
+				}
+			})
+			.catch((error) => {
+				console.error("Error:", error);
+				alert("An error occurred during signup. Please try again later.");
+			});
 	};
 
-	// signup form with submit button
 	return (
-		// handleSubmit is the callback of onSubmit, tells the login API to validate user and password
-		<form onSubmit={handleSubmit}>
-			<label>
-				Username:
-				<input type="text" value={username} onChange={(e) => setUsername(e.target.value)} required />
-			</label>
-			<label>
-				Password:
-				<input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-			</label>
-			<label>
-				Email:
-				<input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-			</label>
-			<label>
-				Birthday:
-				<input type="date" value={birthday} onChange={(e) => setBirthday(e.target.value)} required />
-			</label>
-			<button type="submit">Submit</button>
-		</form>
+		<Card className="mt-2 mb-3 bg-primary text-light">
+			<Card.Body>
+				<Card.Title>Sign up</Card.Title>
+				<Form onSubmit={handleSubmit}>
+					<Form.Group>
+						<Form.Label>Username:</Form.Label>
+						<Form.Control
+							type="text"
+							value={username}
+							onChange={(e) => setUsername(e.target.value)}
+							required
+							minLength="5"
+							className="bg-primary text-light"
+						/>
+					</Form.Group>
+					<Form.Group>
+						<Form.Label>Password:</Form.Label>
+						<Form.Control
+							type="password"
+							value={password}
+							onChange={(e) => setPassword(e.target.value)}
+							required
+							minLength="8"
+							className="bg-primary text-light"
+						/>
+					</Form.Group>
+					<Form.Group>
+						<Form.Label>Email:</Form.Label>
+						<Form.Control
+							type="email"
+							value={email}
+							onChange={(e) => setEmail(e.target.value)}
+							required
+							className="bg-primary text-light"
+						/>
+					</Form.Group>
+					<Form.Group>
+						<Form.Label>Birthdate:</Form.Label>
+						<Form.Control
+							type="date"
+							value={birthday}
+							onChange={(e) => setBirthday(e.target.value)}
+							required
+							className="bg-primary text-light"
+						/>
+					</Form.Group>
+					<Button className="mt-3" variant="light" type="submit">
+						Submit
+					</Button>
+				</Form>
+			</Card.Body>
+		</Card>
 	);
 };
