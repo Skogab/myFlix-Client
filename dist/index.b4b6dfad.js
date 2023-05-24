@@ -27300,7 +27300,7 @@ const MainView = ()=>{
                         xl: 2,
                         children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _movieCard.MovieCard), {
                             movie: movie,
-                            onClick: ()=>setSelectedMovie(movie)
+                            onMovieClick: ()=>setSelectedMovie(movie)
                         }, void 0, false, {
                             fileName: "src/components/main-view/main-view.jsx",
                             lineNumber: 108,
