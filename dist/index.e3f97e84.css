@@ -1,4 +1,32 @@
+.card {
+  width: 100%;
+}
 
+.card .card-img {
+  height: 300px;
+  object-fit: cover;
+}
+
+.card .card-body {
+  padding: 1.25rem;
+}
+
+.card .card-body .card-title {
+  margin-bottom: .5rem;
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.card .card-body .card-text {
+  color: #555;
+  margin-bottom: 1rem;
+  font-size: .875rem;
+}
+
+.card .card-body .btn {
+  width: 100%;
+  margin-top: 1rem;
+}
 
 
 
