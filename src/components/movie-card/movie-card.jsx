@@ -2,17 +2,51 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Button, Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
-
 import "./movie-card.scss";
 
-export const MovieCard = ({ movie, onAddToFavorites }) => {
+export const MovieCard = ({ movie }) => {
 	const handleAddToFavorites = () => {
-		onAddToFavorites(movie.id);
+		const storedToken = localStorage.getItem("token");
+		const storedUser = localStorage.getItem("user");
+
+		fetch(`/users/${storedUser}/movies/${movie.id}`, {
+			method: "POST",
+			headers: {
+				Authorization: `Bearer ${storedToken}`,
+				"Content-Type": "application/json",
+			},
+		})
+			.then((res) => res.json())
+			.then((data) => {
+				alert("Movie added to your favorites list");
+			})
+			.catch((error) => {
+				alert("Error: " + error);
+			});
+	};
+
+	const handleRemoveFromFavorites = () => {
+		const storedToken = localStorage.getItem("token");
+		const storedUser = localStorage.getItem("user");
+
+		fetch(`/users/${storedUser}/movies/${movie.id}`, {
+			method: "DELETE",
+			headers: {
+				Authorization: `Bearer ${storedToken}`,
+				"Content-Type": "application/json",
+			},
+		})
+			.then((res) => res.json())
+			.then((data) => {
+				alert("Movie removed from your favorites list");
+			})
+			.catch((error) => {
+				alert("Error: " + error);
+			});
 	};
 
 	return (
 		<>
-			<img src="https://m.media-amazon.com/images/I/51J5V86vqiL._SY445_.jpg"></img>
 			<Card>
 				<Card.Img variant="top" src={movie.image} />
 				<Card.Body>
@@ -24,6 +58,9 @@ export const MovieCard = ({ movie, onAddToFavorites }) => {
 					</Link>
 					<Button variant="primary" onClick={handleAddToFavorites}>
 						Add to Favorites
+					</Button>
+					<Button variant="danger" onClick={handleRemoveFromFavorites}>
+						Remove from Favorites
 					</Button>
 				</Card.Body>
 			</Card>
@@ -38,5 +75,4 @@ MovieCard.propTypes = {
 		image: PropTypes.string,
 		director: PropTypes.string,
 	}).isRequired,
-	onAddToFavorites: PropTypes.func.isRequired,
 };
