@@ -8,13 +8,23 @@ export const MovieCard = ({ movie }) => {
 	const handleAddToFavorites = () => {
 		const storedToken = localStorage.getItem("token");
 		const storedUser = localStorage.getItem("user");
+		const parsedUser = JSON.parse(storedUser);
 
-		fetch(`/users/${storedUser}/movies/${movie.id}`, {
+		const info = {
+			Title: movie.title,
+			GenreName: movie.genre,
+			DirectorName: movie.director,
+			Email: parsedUser.Email,
+			Password: parsedUser.Password,
+		};
+
+		fetch(`https://movieappskogaby.herokuapp.com/users/${parsedUser.Username}/movies/${movie.id}`, {
 			method: "POST",
 			headers: {
 				Authorization: `Bearer ${storedToken}`,
 				"Content-Type": "application/json",
 			},
+			body: JSON.stringify(info),
 		})
 			.then((res) => res.json())
 			.then((data) => {
@@ -28,8 +38,9 @@ export const MovieCard = ({ movie }) => {
 	const handleRemoveFromFavorites = () => {
 		const storedToken = localStorage.getItem("token");
 		const storedUser = localStorage.getItem("user");
+		const parsedUser = JSON.parse(storedUser);
 
-		fetch(`/users/${storedUser}/movies/${movie.id}`, {
+		fetch(`https://movieappskogaby.herokuapp.com/users/${parsedUser.Username}/movies/${movie.id}`, {
 			method: "DELETE",
 			headers: {
 				Authorization: `Bearer ${storedToken}`,
@@ -46,25 +57,23 @@ export const MovieCard = ({ movie }) => {
 	};
 
 	return (
-		<>
-			<Card>
-				<Card.Img variant="top" src={movie.image} />
-				<Card.Body>
-					<Card.Title>{movie.title}</Card.Title>
-					<Card.Text>{movie.director}</Card.Text>
-					<Card.Text>{movie.description}</Card.Text>
-					<Link to={`/movies/${encodeURIComponent(movie.id)}`}>
-						<Button variant="link">Open</Button>
-					</Link>
-					<Button variant="primary" onClick={handleAddToFavorites}>
-						Add to Favorites
-					</Button>
-					<Button variant="danger" onClick={handleRemoveFromFavorites}>
-						Remove from Favorites
-					</Button>
-				</Card.Body>
-			</Card>
-		</>
+		<Card>
+			<Card.Img variant="top" src={movie.image} />
+			<Card.Body>
+				<Card.Title>{movie.title}</Card.Title>
+				<Card.Text>{movie.director}</Card.Text>
+				<Card.Text>{movie.description}</Card.Text>
+				<Link to={`/movies/${encodeURIComponent(movie.id)}`}>
+					<Button variant="link">Open</Button>
+				</Link>
+				<Button variant="primary" onClick={handleAddToFavorites}>
+					Add to Favorites
+				</Button>
+				<Button variant="danger" onClick={handleRemoveFromFavorites}>
+					Remove from Favorites
+				</Button>
+			</Card.Body>
+		</Card>
 	);
 };
 
