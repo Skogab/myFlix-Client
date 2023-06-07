@@ -5,7 +5,7 @@ import { UpdateForm } from "./update-form";
 import { FavMovies } from "./fav-movies";
 import { MovieCard } from "../movie-card/movie-card";
 
-export const ProfileView = ({ user, movies, addToFavorites }) => {
+export const ProfileView = ({ user, movies, addToFavorites, removeFromFavorites }) => {
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
 	const [email, setEmail] = useState("");
@@ -48,6 +48,10 @@ export const ProfileView = ({ user, movies, addToFavorites }) => {
 		addToFavorites(movieId);
 	};
 
+	const handleRemoveFromFavorites = (movieId) => {
+		removeFromFavorites(movieId);
+	};
+
 	return (
 		<Container>
 			<Row className="mb-4">
@@ -82,6 +86,7 @@ export const ProfileView = ({ user, movies, addToFavorites }) => {
 								movies={movies}
 								userFavoriteMovies={userFavoriteMovies}
 								addToFavorites={handleAddToFavorites} // Pass the function here
+								removeFromFavorites={handleRemoveFromFavorites} // Pass the function here
 							/>
 						</Card.Body>
 					</Card>
