@@ -46,10 +46,19 @@ export const MovieCard = ({ movie }) => {
 				Authorization: `Bearer ${storedToken}`,
 				"Content-Type": "application/json",
 			},
+			body: JSON.stringify({
+				Email: parsedUser.Email,
+				Password: parsedUser.Password,
+				username: parsedUser.Username,
+				movieid: movie.id,
+			}),
 		})
-			.then((res) => res.json())
-			.then((data) => {
-				alert("Movie removed from your favorites list");
+			.then((res) => {
+				if (res.ok) {
+					alert("Movie removed from your favorites list");
+				} else {
+					throw new Error("Failed to remove movie from favorites");
+				}
 			})
 			.catch((error) => {
 				alert("Error: " + error);
