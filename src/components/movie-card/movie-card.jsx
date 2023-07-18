@@ -46,12 +46,6 @@ export const MovieCard = ({ movie }) => {
 				Authorization: `Bearer ${storedToken}`,
 				"Content-Type": "application/json",
 			},
-			body: JSON.stringify({
-				Email: parsedUser.Email,
-				Password: parsedUser.Password,
-				username: parsedUser.Username,
-				movieid: movie.id,
-			}),
 		})
 			.then((res) => {
 				if (res.ok) {
