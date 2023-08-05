@@ -1,6 +1,14 @@
 import { useState } from "react";
 import { Form, Button, Card } from "react-bootstrap";
 
+const formatDate = (dateString) => {
+	const dateObj = new Date(dateString);
+	const year = dateObj.getFullYear();
+	const month = String(dateObj.getMonth() + 1).padStart(2, "0");
+	const day = String(dateObj.getDate()).padStart(2, "0");
+	return `${year}-${month}-${day}`;
+};
+
 export const SignupView = () => {
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
@@ -14,7 +22,7 @@ export const SignupView = () => {
 			Username: username,
 			Password: password,
 			Email: email,
-			Birthday: birthday,
+			Birthday: formatDate(birthday), // Das Datum im richtigen Format umwandeln
 		};
 
 		fetch("https://movieappskogaby.herokuapp.com/users", {
