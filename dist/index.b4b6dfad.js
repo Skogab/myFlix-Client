@@ -46900,12 +46900,12 @@ const ProfileView = ({ user , movies , addToFavorites , removeFromFavorites  })=
             setPassword(response.Password);
             setEmail(response.Email);
             setBirthday(response.Birthday);
-            setUserFavoriteMovies(response.FavoriteMovies);
+            const userFavoriteMovieIds = response.FavoriteMovies.map((movie)=>movie._id);
+            setUserFavoriteMovies(userFavoriteMovieIds);
         }).catch((error)=>{
             console.log("Error fetching user data:", error);
         });
     };
-    const favoriteMovies = movies.filter((movie)=>userFavoriteMovies.includes(movie._id));
     const handleBack = ()=>{
         navigate("/");
     };
