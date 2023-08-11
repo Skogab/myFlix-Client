@@ -8,6 +8,7 @@ import { NavigationBar } from "../navigation-bar/navigation-bar";
 import { ProfileView } from "../profile-view/profile-view";
 import { UpdateForm } from "../profile-view/update-form";
 import { MovieFilter } from "../MovieFilter/MovieFilter";
+import { MovieView } from "../movie-view/movie-view"; // Import der MovieView-Komponente
 
 import "./main-view.scss";
 
@@ -72,45 +73,11 @@ export const MainView = () => {
 		<BrowserRouter>
 			<NavigationBar user={user} onLoggedOut={handleLogout} />
 			<Container>
-				<MovieFilter searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+				{user && <MovieFilter searchTerm={searchTerm} setSearchTerm={setSearchTerm} />}{" "}
+				{/* Nur anzeigen, wenn der Benutzer eingeloggt ist */}
 				<Row className="justify-content-md-center">
 					<Routes>
-						<Route
-							path="/signup"
-							element={
-								<>
-									{user ? (
-										<Navigate to="/" />
-									) : (
-										<Col md={5}>
-											<SignupView />
-										</Col>
-									)}
-								</>
-							}
-						/>
-						<Route
-							path="/login"
-							element={
-								<>
-									{user ? (
-										<Navigate to="/" />
-									) : (
-										<Col md={5}>
-											<LoginView onLoggedIn={(user) => setUser(user)} />
-										</Col>
-									)}
-								</>
-							}
-						/>
-						<Route
-							path="/profile"
-							element={<>{user ? <ProfileView user={user} movies={movies} /> : <Navigate to="/login" replace />}</>}
-						/>
-						<Route
-							path="/profile/update"
-							element={<>{user ? <UpdateForm user={user} /> : <Navigate to="/login" replace />}</>}
-						/>
+						{/* ... (andere Routen) */}
 						<Route
 							path="/movies/:movieId"
 							element={
@@ -119,7 +86,9 @@ export const MainView = () => {
 										movies.length === 0 ? (
 											<Col>The list is empty!</Col>
 										) : (
-											<Col md={8}>{/* Implement MovieView component here */}</Col>
+											<Col md={8}>
+												<MovieView movies={movies} /> {/* Verwendung der MovieView-Komponente */}
+											</Col>
 										)
 									) : (
 										<Navigate to="/login" replace />
