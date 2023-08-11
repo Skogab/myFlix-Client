@@ -1,24 +1,24 @@
 import React, { useState, useEffect } from "react";
 import { MovieCard } from "../movie-card/movie-card";
-import { MovieView } from "../movie-view/movie-view";
 import { LoginView } from "../login-view/login-view";
 import { SignupView } from "../signup-view/signup-view";
-import { Col, Button, Container, Row } from "react-bootstrap";
+import { Col, Container, Row } from "react-bootstrap";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { NavigationBar } from "../navigation-bar/navigation-bar";
 import { ProfileView } from "../profile-view/profile-view";
 import { UpdateForm } from "../profile-view/update-form";
-import { MovieFilter } from "../movie-filter/movie-filter"; // Neue Filmfilter-Komponente
+import { MovieFilter } from "../MovieFilter/MovieFilter";
 
 import "./main-view.scss";
 
 export const MainView = () => {
 	const storedUser = JSON.parse(localStorage.getItem("user"));
 	const storedToken = localStorage.getItem("token");
-	const [user, setUser] = useState(storedUser ? storedUser : null);
-	const [token, setToken] = useState(storedToken ? storedToken : null);
+	const [user, setUser] = useState(storedUser || null);
+	const [token, setToken] = useState(storedToken || null);
 	const [movies, setMovies] = useState([]);
 	const [loading, setLoading] = useState(false);
+	const [searchTerm, setSearchTerm] = useState("");
 
 	useEffect(() => {
 		if (!token) {
@@ -53,39 +53,26 @@ export const MainView = () => {
 		localStorage.clear();
 	};
 
-	// State für die ausgewählten Filteroptionen
-	const [selectedGenre, setSelectedGenre] = useState("");
-	const [selectedDirector, setSelectedDirector] = useState("");
-
-	// Funktion zum Filtern der Filme basierend auf den ausgewählten Optionen
 	const filterMovies = () => {
 		let filteredMovies = movies;
 
-		if (selectedGenre) {
-			filteredMovies = filteredMovies.filter((movie) => movie.genre === selectedGenre);
-		}
-
-		if (selectedDirector) {
-			filteredMovies = filteredMovies.filter((movie) => movie.director === selectedDirector);
+		if (searchTerm) {
+			const searchTermLower = searchTerm.toLowerCase();
+			filteredMovies = filteredMovies.filter((movie) => {
+				return (
+					movie.genre.toLowerCase().includes(searchTermLower) || movie.director.toLowerCase().includes(searchTermLower)
+				);
+			});
 		}
 
 		return filteredMovies;
 	};
 
-	// Filme nach den ausgewählten Filteroptionen filtern
-	const filteredMovies = filterMovies();
-
 	return (
 		<BrowserRouter>
 			<NavigationBar user={user} onLoggedOut={handleLogout} />
 			<Container>
-				{/* Filmfilter-Komponente */}
-				<MovieFilter
-					selectedGenre={selectedGenre}
-					selectedDirector={selectedDirector}
-					setSelectedGenre={setSelectedGenre}
-					setSelectedDirector={setSelectedDirector}
-				/>
+				<MovieFilter searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
 				<Row className="justify-content-md-center">
 					<Routes>
 						<Route
@@ -117,17 +104,25 @@ export const MainView = () => {
 							}
 						/>
 						<Route
+							path="/profile"
+							element={<>{user ? <ProfileView user={user} movies={movies} /> : <Navigate to="/login" replace />}</>}
+						/>
+						<Route
+							path="/profile/update"
+							element={<>{user ? <UpdateForm user={user} /> : <Navigate to="/login" replace />}</>}
+						/>
+						<Route
 							path="/movies/:movieId"
 							element={
 								<>
-									{!user ? (
-										<Navigate to="/login" replace />
-									) : movies.length === 0 ? (
-										<Col>The list is empty!</Col>
+									{user ? (
+										movies.length === 0 ? (
+											<Col>The list is empty!</Col>
+										) : (
+											<Col md={8}>{/* Implement MovieView component here */}</Col>
+										)
 									) : (
-										<Col md={8}>
-											<MovieView movies={movies} />
-										</Col>
+										<Navigate to="/login" replace />
 									)}
 								</>
 							}
@@ -136,29 +131,23 @@ export const MainView = () => {
 							path="/"
 							element={
 								<>
-									{!user ? (
-										<Navigate to="/login" replace />
-									) : filteredMovies.length === 0 ? (
-										<Col>The list is empty!</Col>
+									{user ? (
+										filterMovies().length === 0 ? (
+											<Col>The list is empty!</Col>
+										) : (
+											<>
+												{filterMovies().map((movie) => (
+													<Col className="mb-4" key={movie.id} md={4}>
+														<MovieCard movie={movie} />
+													</Col>
+												))}
+											</>
+										)
 									) : (
-										<>
-											{filteredMovies.map((movie) => (
-												<Col className="mb-4" key={movie.id} md={4}>
-													<MovieCard movie={movie} />
-												</Col>
-											))}
-										</>
+										<Navigate to="/login" replace />
 									)}
 								</>
 							}
-						/>
-						<Route
-							path="/profile"
-							element={<>{user ? <ProfileView user={user} movies={movies} /> : <Navigate to="/login" replace />}</>}
-						/>
-						<Route
-							path="/profile/update"
-							element={<>{user ? <UpdateForm user={user} /> : <Navigate to="/login" replace />}</>}
 						/>
 					</Routes>
 				</Row>
