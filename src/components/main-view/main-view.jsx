@@ -3,7 +3,7 @@ import { MovieCard } from "../movie-card/movie-card";
 import { MovieView } from "../movie-view/movie-view";
 import { LoginView } from "../login-view/login-view";
 import { SignupView } from "../signup-view/signup-view";
-import { Col, Button, Container, Row } from "react-bootstrap";
+import { Col, Container, Row } from "react-bootstrap";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { NavigationBar } from "../navigation-bar/navigation-bar";
 import { ProfileView } from "../profile-view/profile-view";
@@ -19,6 +19,9 @@ export const MainView = () => {
 	const [token, setToken] = useState(storedToken ? storedToken : null);
 	const [movies, setMovies] = useState([]);
 	const [loading, setLoading] = useState(false);
+	const [selectedGenre, setSelectedGenre] = useState("");
+	const [selectedDirector, setSelectedDirector] = useState("");
+	const [searchTerm, setSearchTerm] = useState(""); // Hinzugefügt
 
 	useEffect(() => {
 		if (!token) {
@@ -53,10 +56,6 @@ export const MainView = () => {
 		localStorage.clear();
 	};
 
-	// State für die ausgewählten Filteroptionen
-	const [selectedGenre, setSelectedGenre] = useState("");
-	const [selectedDirector, setSelectedDirector] = useState("");
-
 	// Funktion zum Filtern der Filme basierend auf den ausgewählten Optionen
 	const filterMovies = () => {
 		let filteredMovies = movies;
@@ -67,6 +66,15 @@ export const MainView = () => {
 
 		if (selectedDirector) {
 			filteredMovies = filteredMovies.filter((movie) => movie.director === selectedDirector);
+		}
+
+		if (searchTerm) {
+			// Hinzugefügt
+			filteredMovies = filteredMovies.filter(
+				(movie) =>
+					movie.genre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+					movie.director.toLowerCase().includes(searchTerm.toLowerCase())
+			);
 		}
 
 		return filteredMovies;
@@ -85,6 +93,8 @@ export const MainView = () => {
 					selectedDirector={selectedDirector}
 					setSelectedGenre={setSelectedGenre}
 					setSelectedDirector={setSelectedDirector}
+					searchTerm={searchTerm} // Hinzugefügt
+					setSearchTerm={setSearchTerm} // Hinzugefügt
 				/>
 				<Row className="justify-content-md-center">
 					<Routes>

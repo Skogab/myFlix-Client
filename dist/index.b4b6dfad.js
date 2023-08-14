@@ -27196,6 +27196,9 @@ const MainView = ()=>{
     const [token, setToken] = (0, _react.useState)(storedToken ? storedToken : null);
     const [movies, setMovies] = (0, _react.useState)([]);
     const [loading, setLoading] = (0, _react.useState)(false);
+    const [selectedGenre, setSelectedGenre] = (0, _react.useState)("");
+    const [selectedDirector, setSelectedDirector] = (0, _react.useState)("");
+    const [searchTerm, setSearchTerm] = (0, _react.useState)(""); // Hinzugefügt
     (0, _react.useEffect)(()=>{
         if (!token) return;
         setLoading(true);
@@ -27226,14 +27229,13 @@ const MainView = ()=>{
         setToken(null);
         localStorage.clear();
     };
-    // State für die ausgewählten Filteroptionen
-    const [selectedGenre, setSelectedGenre] = (0, _react.useState)("");
-    const [selectedDirector, setSelectedDirector] = (0, _react.useState)("");
     // Funktion zum Filtern der Filme basierend auf den ausgewählten Optionen
     const filterMovies = ()=>{
         let filteredMovies = movies;
         if (selectedGenre) filteredMovies = filteredMovies.filter((movie)=>movie.genre === selectedGenre);
         if (selectedDirector) filteredMovies = filteredMovies.filter((movie)=>movie.director === selectedDirector);
+        if (searchTerm) // Hinzugefügt
+        filteredMovies = filteredMovies.filter((movie)=>movie.genre.toLowerCase().includes(searchTerm.toLowerCase()) || movie.director.toLowerCase().includes(searchTerm.toLowerCase()));
         return filteredMovies;
     };
     // Filme nach den ausgewählten Filteroptionen filtern
@@ -27245,7 +27247,7 @@ const MainView = ()=>{
                 onLoggedOut: handleLogout
             }, void 0, false, {
                 fileName: "src/components/main-view/main-view.jsx",
-                lineNumber: 80,
+                lineNumber: 88,
                 columnNumber: 4
             }, undefined),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactBootstrap.Container), {
@@ -27254,10 +27256,12 @@ const MainView = ()=>{
                         selectedGenre: selectedGenre,
                         selectedDirector: selectedDirector,
                         setSelectedGenre: setSelectedGenre,
-                        setSelectedDirector: setSelectedDirector
+                        setSelectedDirector: setSelectedDirector,
+                        searchTerm: searchTerm,
+                        setSearchTerm: setSearchTerm
                     }, void 0, false, {
                         fileName: "src/components/main-view/main-view.jsx",
-                        lineNumber: 83,
+                        lineNumber: 91,
                         columnNumber: 5
                     }, undefined),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactBootstrap.Row), {
@@ -27276,7 +27280,7 @@ const MainView = ()=>{
                                     }, void 0, false)
                                 }, void 0, false, {
                                     fileName: "src/components/main-view/main-view.jsx",
-                                    lineNumber: 91,
+                                    lineNumber: 101,
                                     columnNumber: 7
                                 }, undefined),
                                 /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactRouterDom.Route), {
@@ -27293,7 +27297,7 @@ const MainView = ()=>{
                                     }, void 0, false)
                                 }, void 0, false, {
                                     fileName: "src/components/main-view/main-view.jsx",
-                                    lineNumber: 105,
+                                    lineNumber: 115,
                                     columnNumber: 7
                                 }, undefined),
                                 /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactRouterDom.Route), {
@@ -27313,7 +27317,7 @@ const MainView = ()=>{
                                     }, void 0, false)
                                 }, void 0, false, {
                                     fileName: "src/components/main-view/main-view.jsx",
-                                    lineNumber: 119,
+                                    lineNumber: 129,
                                     columnNumber: 7
                                 }, undefined),
                                 /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactRouterDom.Route), {
@@ -27336,7 +27340,7 @@ const MainView = ()=>{
                                     }, void 0, false)
                                 }, void 0, false, {
                                     fileName: "src/components/main-view/main-view.jsx",
-                                    lineNumber: 135,
+                                    lineNumber: 145,
                                     columnNumber: 7
                                 }, undefined),
                                 /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactRouterDom.Route), {
@@ -27352,7 +27356,7 @@ const MainView = ()=>{
                                     }, void 0, false)
                                 }, void 0, false, {
                                     fileName: "src/components/main-view/main-view.jsx",
-                                    lineNumber: 155,
+                                    lineNumber: 165,
                                     columnNumber: 7
                                 }, undefined),
                                 /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactRouterDom.Route), {
@@ -27367,34 +27371,34 @@ const MainView = ()=>{
                                     }, void 0, false)
                                 }, void 0, false, {
                                     fileName: "src/components/main-view/main-view.jsx",
-                                    lineNumber: 159,
+                                    lineNumber: 169,
                                     columnNumber: 7
                                 }, undefined)
                             ]
                         }, void 0, true, {
                             fileName: "src/components/main-view/main-view.jsx",
-                            lineNumber: 90,
+                            lineNumber: 100,
                             columnNumber: 6
                         }, undefined)
                     }, void 0, false, {
                         fileName: "src/components/main-view/main-view.jsx",
-                        lineNumber: 89,
+                        lineNumber: 99,
                         columnNumber: 5
                     }, undefined)
                 ]
             }, void 0, true, {
                 fileName: "src/components/main-view/main-view.jsx",
-                lineNumber: 81,
+                lineNumber: 89,
                 columnNumber: 4
             }, undefined)
         ]
     }, void 0, true, {
         fileName: "src/components/main-view/main-view.jsx",
-        lineNumber: 79,
+        lineNumber: 87,
         columnNumber: 3
     }, undefined);
 };
-_s(MainView, "jCWBY0SdL3RwWiZSh0j1irirJWc=");
+_s(MainView, "It4B76pW3RXrZTnDhiYPPshynrg=");
 _c = MainView;
 var _c;
 $RefreshReg$(_c, "MainView");
