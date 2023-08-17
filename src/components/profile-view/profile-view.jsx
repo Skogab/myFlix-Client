@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Card, Container, Row, Col, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { UpdateForm } from "./update-form";
-import { FavMovies } from "./fav-movies";
 import { MovieCard } from "../movie-card/movie-card";
 
 export const ProfileView = ({ user, movies, addToFavorites, removeFromFavorites }) => {
@@ -38,18 +37,11 @@ export const ProfileView = ({ user, movies, addToFavorites, removeFromFavorites 
 			});
 	};
 
-	const favoriteMovies = movies.filter((movie) => userFavoriteMovies.includes(movie._id));
-
+	console.log("movies", movies);
+	const favoriteMovies = movies.filter((movie) => userFavoriteMovies.includes(movie.id));
+	console.log("favoriteMovies", favoriteMovies);
 	const handleBack = () => {
 		navigate("/");
-	};
-
-	const handleAddToFavorites = (movieId) => {
-		addToFavorites(movieId);
-	};
-
-	const handleRemoveFromFavorites = (movieId) => {
-		removeFromFavorites(movieId);
 	};
 
 	return (
@@ -82,12 +74,17 @@ export const ProfileView = ({ user, movies, addToFavorites, removeFromFavorites 
 				<Col>
 					<Card>
 						<Card.Body>
-							<FavMovies
-								movies={movies}
-								userFavoriteMovies={userFavoriteMovies}
-								addToFavorites={handleAddToFavorites} // Pass the function here
-								removeFromFavorites={handleRemoveFromFavorites} // Pass the function here
-							/>
+							{favoriteMovies.length === 0 ? (
+								<span>No favorite movies selected</span>
+							) : (
+								<Row>
+									{favoriteMovies.map((movie) => (
+										<Col key={movie.id} xs={12} md={4} lg={4} className="mb-4">
+											<MovieCard movie={movie} />
+										</Col>
+									))}
+								</Row>
+							)}
 						</Card.Body>
 					</Card>
 				</Col>
